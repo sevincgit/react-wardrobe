@@ -13,7 +13,6 @@ const Container = () => {
   const [weather, setWeather] = useState({});
   const [error, setError] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(null);
-  const [itemUpdating, setItemUpdating] = useState(null);
 
   const fetchWardrobe = async () => {
     try {
