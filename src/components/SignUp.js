@@ -21,7 +21,9 @@ const SignUp = () => {
       });
       console.log(response.body);
       if (response.status === 201) {
-        setMessageNewUser(response.statusText);
+        // setMessageNewUser(response.statusText);
+        setMessageNewUser('Account created successfully');
+        alert('You signed up!');
       } else {
         let error = new Error(`${response.statusText}: ${response.url}`);
         error.status = response.status;
@@ -29,7 +31,8 @@ const SignUp = () => {
       }
     } catch (error) {
       console.log('There was an error when updating data', error);
-      setError(error.message);
+      // setError(error.message);
+      setError('There was an error signing up');
     }
   };
 
@@ -41,12 +44,12 @@ const SignUp = () => {
     },
     validationSchema: Yup.object({
       username: Yup.string().min(2, 'Min 2 letters').required('Required'),
-      email: Yup.string().email().required('Required'),
-      password: Yup.string().password().min(6).minUppercase(1).required('Required'),
+      email: Yup.string().email('Invalid email address').required('Required'),
+      password: Yup.string().password().max(72, 'Must be 72 characters or less').required('Required'),
     }),
     onSubmit: (values) => {
       console.log('values in onsubmit', values);
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));
       createNewUser(values);
     },
   });
@@ -63,16 +66,10 @@ const SignUp = () => {
             <div key={inputField} className='d-flex flex-row m-2'>
               <label htmlFor={inputField} className='m-1'>
                 {' '}
-                {`${inputField} of item`}
+                {inputField}
               </label>
               {inputField === 'password' ? (
-                <input
-                  id={inputField}
-                  name={inputField}
-                  type='password'
-                  placeholder={`Add ${inputField} of the item`}
-                  onChange={formik.handleChange}
-                />
+                <input id={inputField} name={inputField} type='password' placeholder={`Add ${inputField}`} onChange={formik.handleChange} />
               ) : (
                 <input id={inputField} name={inputField} type='text' placeholder={`Add ${inputField}`} onChange={formik.handleChange} />
               )}
@@ -87,6 +84,9 @@ const SignUp = () => {
           Sign Up
         </Button>
       </form>
+      {/* {error ? <div>{error.message}</div> : null} */}
+      {error ? <div>{error}</div> : null}
+      {messageNewUser ? <div className='signup_message'>{messageNewUser}</div> : null}
     </div>
   );
 };

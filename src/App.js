@@ -1,35 +1,25 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
 import './App.css';
 import Header from './components/Header';
 import Container from './components/Container';
 import CreateNewItemContainer from './components/CreateNewItemContainer';
 import SignUp from './components/SignUp';
-
-// let tshirt = {
-//   title: 'T-shirt',
-//   definition: 'A nice cotton T-shirt',
-// };
-// let socks = {
-//   title: 'Socks',
-//   definition: 'Socks for every day',
-// };
-// let shorts = {
-//   title: 'Shorts',
-//   definition: 'A pair of denim shorts',
-// };
-
-// const wardrobe = [tshirt, socks, shorts];
+import Login from './components/Login';
 
 function App() {
+  //ad a state for Logged in:
+  const [loggedIn, setLoggedIn] = useState(false);
   return (
     <BrowserRouter>
       <div className='App'>
         <Header />
         <Routes>
-          <Route path='/' element={<Container />} />
+          {loggedIn ? <Route path='/' element={<Container />} /> : <Route path='/' element={<Navigate to='/signup' replace />} />}
+
           <Route path='/about' element={<div>This is my about page Need to create a component for this!</div>} />
           <Route path='/new-item' element={<CreateNewItemContainer />} />
+          <Route path='/login' element={<Login setLoggedIn={setLoggedIn} />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='*' element={<div>Pag not found</div>} />
         </Routes>

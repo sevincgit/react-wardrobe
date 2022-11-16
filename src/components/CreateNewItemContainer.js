@@ -8,8 +8,8 @@ const CreateNewItemContainer = () => {
 
   const uploadImageToCloudinary = async (item) => {
     // setup
-    let preset = process.env.REACT_APP_CLOUDINARY_PRESET;
-    let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+    let preset = 'wardrobe';
+    let cloudName = 'dtgd7zrg9';
     let cloudPath = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
     // create body to post:
     let dataForBody = new FormData();
@@ -33,12 +33,19 @@ const CreateNewItemContainer = () => {
     let imageUrl = resultFromImageUpload.url;
     let newItem = { ...formValues, url: imageUrl };
 
+    // get access to token in local storage:
+    let tokenFromLS = localStorage.getItem('token');
+    let JWT_TOKEN = JSON.parse(tokenFromLS);
+
     try {
       let path = `${process.env.REACT_APP_WARDROBE_API}/wardrobe/`;
       let response = await fetch(path, {
         method: 'POST',
         mode: 'cors',
-        headers: { 'Content-type': 'application/json' },
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${JWT_TOKEN}`,
+        },
         body: JSON.stringify(newItem),
       });
       console.log(response);

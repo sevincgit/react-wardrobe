@@ -8,7 +8,6 @@ const ButtonContainer = (props) => {
           <button
             onClick={() => {
               props.addSeasonFilter(item);
-              console.log(item);
             }}
             className='btn btn-warning season'
             key={index}

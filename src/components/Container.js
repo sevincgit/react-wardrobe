@@ -16,9 +16,12 @@ const Container = () => {
 
   const fetchWardrobe = async () => {
     try {
+      // get token from local storage and send it to backend
+      let tokenJson = localStorage.getItem('token');
+      let JWT_TOKEN = JSON.parse(tokenJson);
       //fetch
       let path = `${process.env.REACT_APP_WARDROBE_API}/wardrobe`;
-      let response = await fetch(path, { mode: 'cors' });
+      let response = await fetch(path, { mode: 'cors', headers: { Authorization: `Bearer ${JWT_TOKEN}` } });
       //check status
       // if not 200
       if (response.status === 200) {
@@ -69,8 +72,8 @@ const Container = () => {
   //Function to upload image:
   const uploadImageToCloudinary = async (item) => {
     // setup
-    let preset = process.env.REACT_APP_CLOUDINARY_PRESET;
-    let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+    let preset = 'wardrobe';
+    let cloudName = 'dtgd7zrg9';
     let cloudPath = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
     // create body to post:
     let dataForBody = new FormData();
@@ -99,7 +102,6 @@ const Container = () => {
     //upload image to cloudinary: ONLY if there is a changed image
     if (uploadImage) {
       let resultFromImageUpload = await uploadImageToCloudinary(updatedItemValues);
-      console.log('updateWardrobeItem, resultFromImageUpload', resultFromImageUpload);
       imageUrl = resultFromImageUpload.url;
     } else {
       imageUrl = updatedItemValues.url;
@@ -120,7 +122,6 @@ const Container = () => {
     //fetch with PUT
     try {
       let path = `${process.env.REACT_APP_WARDROBE_API}/wardrobe/${id}`;
-      console.log('local host api key', process.env.REACT_APP_WARDROBE_API);
       let response = await fetch(path, {
         method: 'PUT',
         mode: 'cors',
@@ -205,8 +206,6 @@ const Container = () => {
       console.log('item', item, season);
       return item.season === season || item.season === 'All';
     });
-    console.log('selectedSeasonItems', selectedSeasonItems);
-    console.log(wardrobe);
     setSeasonWardrobe(selectedSeasonItems);
 
     console.log(seasonWardrobe);
